@@ -6,19 +6,26 @@ import RegisterScreen from "./pages/RegisterScreen";
 import TopicScreen from "./pages/TopicScreen";
 import FlashcardScreen from "./pages/FashcardScreen";
 
+export type RootStackParamList = {
+  Login: undefined;
+  Register: undefined;
+  Home: undefined;
+  Topic: { subjectId: number };
+  Flashcard: { topicId: number };
+}
 
-const Stack = createNativeStackNavigator();
+const RootStack = createNativeStackNavigator<RootStackParamList>();
 
 export default function Router() {
   return (
     <NavigationContainer>
-      <Stack.Navigator>
-        <Stack.Screen name="Login" component={LoginScreen} options={{ title: '' }} />
-        <Stack.Screen name="Register" component={RegisterScreen} options={{ title: '' }} />
-        <Stack.Screen name="Home" component={HomeScreen} options={{ title: '' }} />
-        <Stack.Screen name="Topic" component={TopicScreen} options={{ title: '' }} />
-        <Stack.Screen name="Flashcard" component={FlashcardScreen} options={{ title: '' }} />
-      </Stack.Navigator>
+      <RootStack.Navigator>
+        <RootStack.Screen name="Login" component={LoginScreen} options={{ title: '' }} />
+        <RootStack.Screen name="Register" component={RegisterScreen} options={{ title: '' }} />
+        <RootStack.Screen name="Home" component={HomeScreen} options={{ title: '' }} />
+        <RootStack.Screen name="Topic" component={TopicScreen} options={{ title: '' }} />
+        <RootStack.Screen name="Flashcard" component={FlashcardScreen} options={{ title: '' }} />
+      </RootStack.Navigator>
     </NavigationContainer>
   );
 }

@@ -1,4 +1,8 @@
+import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Text, View, SafeAreaView } from "react-native";
+import { RootStackParamList } from "../../Router";
+
+type TopicScreenProps = NativeStackScreenProps<RootStackParamList, 'Topic'>;
 
 
 export default function FlashcardScreen() {
