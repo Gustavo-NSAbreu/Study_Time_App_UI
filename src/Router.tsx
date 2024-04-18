@@ -20,7 +20,7 @@ export default function Router() {
   return (
     <NavigationContainer>
       <RootStack.Navigator>
-        <RootStack.Screen name="Login" component={LoginScreen} options={{ title: '' }} />
+        <RootStack.Screen name="Login" component={LoginScreen} options={{ headerShown: false }} />
         <RootStack.Screen name="Register" component={RegisterScreen} options={{ title: '' }} />
         <RootStack.Screen name="Home" component={HomeScreen} options={{ title: '' }} />
         <RootStack.Screen name="Topic" component={TopicScreen} options={{ title: '' }} />

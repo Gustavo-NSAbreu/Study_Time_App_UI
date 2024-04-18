@@ -11,7 +11,7 @@ export default function Subjects() {
 
   return (
     <View>
-      {subjects.map((subject) => (
+      {subjects.length ? subjects.map((subject) => (
         <Pressable
           key={subject.id}
           onPress={() => navigation.navigate(({ name: 'Topic', params: { subjectId: subject.id } } as never))}
@@ -20,7 +20,10 @@ export default function Subjects() {
           <Text className='text-lg ml-12'>{subject.name}</Text>
           <Text className='text-lg mr-12'>➡️</Text>
         </Pressable>
-      ))}
+      )):
+        (
+          <Text className='text-lg ml-12 font-bold'>Nenhuma matéria cadastrada</Text>
+      )}
     </View>
   );
 }

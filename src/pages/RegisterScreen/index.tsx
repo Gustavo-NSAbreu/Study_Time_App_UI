@@ -11,7 +11,7 @@ export default function RegisterScreen() {
   const navigation = useNavigation();
 
   return (
-    <SafeAreaView className='flex-1 h-full pt-[170px] bg-slate-50'>
+    <SafeAreaView className='flex-1 h-screen pt-[170px] bg-slate-50'>
       <View className='items-start-start pl-16'>
         <Text className='text-slate-950 text-2xl mt-4 mb-8'>Cadastre-se</Text>
       </View>

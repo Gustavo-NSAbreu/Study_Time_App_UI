@@ -15,16 +15,18 @@ export default function Topics({ subjectId }: TopicProps) {
 
   return (
     <View>
-      {filteredTopics?.map((topic) => (
+      {filteredTopics.length ? filteredTopics?.map((topic) => (
         <Pressable
           key={topic.id}
-          onPress={() => navigation.navigate(({ name: 'Flashcards', params: { topicId: topic.id } } as never))}
+          onPress={() => navigation.navigate(({ name: 'Flashcard', params: { topicId: topic.id } } as never))}
           className='flex-row justify-between border-b border-gray-500 mb-8'
         >
           <Text className='text-lg ml-12'>{topic.name}</Text>
           <Text className='text-lg mr-12'>➡️</Text>
         </Pressable>
-      ))}
+      )) : (
+        <Text className='text-lg font-bold self-center'>Nenhum tópico cadastrado</Text>
+      )}
     </View>
   );
 }

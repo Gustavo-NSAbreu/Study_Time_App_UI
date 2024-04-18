@@ -255,3 +255,78 @@ export const topicList: Topic[] = [
     subjectId: 3,
   },
 ]
+
+export const flashcardList = [
+  {
+    id: 1,
+    question: "Qual é a fórmula de Bhaskara?",
+    answer: "x = (-b ± √Δ) / 2a",
+    topicId: 1
+  },
+  {
+    id: 2,
+    question: "Qual é a fórmula da função afim?",
+    answer: "f(x) = ax + b",
+    topicId: 1
+  },
+  {
+    id: 3,
+    question: "Qual é a fórmula da função quadrática?",
+    answer: "f(x) = ax² + bx + c",
+    topicId: 1
+  },
+  {
+    id: 4,
+    question: "Qual é a fórmula da função exponencial?",
+    answer: "f(x) = a^x",
+    topicId: 1
+  },
+  {
+    id: 5,
+    question: "Qual é a fórmula da função logarítmica?",
+    answer: "f(x) = loga(x)",
+    topicId: 1
+  },
+  {
+    id: 6,
+    question: "Qual é a fórmula da função trigonométrica?",
+    answer: "f(x) = sen(x), f(x) = cos(x), f(x) = tg(x)",
+    topicId: 1
+  },
+  {
+    id: 7,
+    question: "Qual é a fórmula da função modular?",
+    answer: "f(x) = |x|",
+    topicId: 1
+  },
+  {
+    id: 8,
+    question: "Qual é a fórmula da função polinomial?",
+    answer: "f(x) = a0 + a1x + a2x² + ... + anx^n",
+    topicId: 1
+  },
+  {
+    id: 9,
+    question: "Qual é a fórmula da função racional?",
+    answer: "f(x) = p(x) / q(x)",
+    topicId: 1
+  },
+  {
+    id: 10,
+    question: "Qual é a fórmula da função irracional?",
+    answer: "f(x) = √x",
+    topicId: 1
+  },
+  {
+    id: 11,
+    question: "Qual é a fórmula da função trigonométrica?",
+    answer: "f(x) = sen(x), f(x) = cos(x), f(x) = tg(x)",
+    topicId: 1
+  },
+  {
+    id: 12,
+    question: "Qual é a fórmula da função trigonométrica?",
+    answer: "f(x) = sen(x), f(x) = cos(x), f(x) = tg(x)",
+    topicId: 1
+  },
+]
