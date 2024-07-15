@@ -45,7 +45,7 @@ export default function HomeScreen() {
       <ScrollView className="w-full mt-20">
         <View className="w-full ">
           <View className="flex-row gap-52 self-center justify-center items-center mb-12">
-            <Text className="text-2xl font-bold">Matérias</Text>
+            <Text className="text-2xl font-bold">Tópicos</Text>
             <Pressable
               onPress={showTopicCreationModal}
             >

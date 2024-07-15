@@ -4,21 +4,34 @@ import { FlashCard } from "../../../../entity/flashCard.entity";
 import FlashCardDeletionModal from "../FlashCardDeletionModal";
 import { FlashCardService } from "../../../../integration/study-time/flashCard/flashCard.service";
 
-interface FlashcardProps {
-  setFlashCards: (flashcards: any) => void;
-  flashCards: FlashCard[];
+interface FlashCardListProps {
   subtopicId: number;
+  flashCards: FlashCard[];
+  removeFlashCard: (flashCardId: number) => void;
+  addNewFlashCard: (flashCard: FlashCard) => void;
+  setAllFlashCards: (flashCards: FlashCard[]) => void;
 }
 
 interface Turned {
   [key: number]: boolean;
 }
 
-export default function FlashCardList({ subtopicId }: FlashcardProps) {
-
+export default function FlashCardList({ subtopicId, flashCards, addNewFlashCard, setAllFlashCards, removeFlashCard }: FlashCardListProps) {
   const flashCardService = new FlashCardService();
+  
+  const [isTurned, setIsTurned] = useState<Turned>({});
+  const [selectedFlashCard, setSelectedFlashCard] = useState<FlashCard>({} as FlashCard);
+  const [isFlashCardDeletionModalVisible, setIsFlashCardDeletionModalVisible] = useState(false);
 
-  const [flashCards, setFlashCards] = useState<FlashCard[]>([]);
+  function showFlashCardDeletionModal(flashCard: FlashCard) {
+    setSelectedFlashCard(flashCard);
+    setIsFlashCardDeletionModalVisible(true);
+  }
+
+  function hideFlashCardDeletionModal() {
+    setIsFlashCardDeletionModalVisible(false);
+    setSelectedFlashCard({} as FlashCard);
+  }
 
   async function fetchFlashCards() {
     return await flashCardService.findAllFlashCard(subtopicId);
@@ -26,41 +39,35 @@ export default function FlashCardList({ subtopicId }: FlashcardProps) {
 
   useEffect(() => {
     fetchFlashCards().then((response) => {
-      console.log(response.data);
       if (!response.data) return;
-      setFlashCards(response.data);
+      setAllFlashCards(response.data);
     });
   }, []);
-
-  const [isFlashCardDeletionModalVisible, setIsFlashCardDeletionModalVisible] = useState(false);
-
-  function showFlashCardDeletionModal() { setIsFlashCardDeletionModalVisible(true); }
-  function hideFlashCardDeletionModal() { setIsFlashCardDeletionModalVisible(false); }
-
-  const [isTurned, setIsTurned] = useState<Turned>({});
 
   function handlePress(id: number) {
     setIsTurned(state => ({ ...state, [id]: !state[id] }));
   }
 
   return (
-    <View className='w-screen items-center'>
+    <View className='w-screen items-center mb-10'>
       {flashCards.length ? flashCards.map((flashCard) => (
         <View key={flashCard.id}>
           <Pressable
             onPress={() => handlePress(flashCard.id)}
-            onLongPress={showFlashCardDeletionModal}
-            className="justify-center items-center w-96 h-fit mb-4 p-5 animate-pulse border rounded-2xl border-gray-300 shadow-sm shadow-black bg-gray-100"
+            onLongPress={() => showFlashCardDeletionModal(flashCard)}
+            className={`${isTurned[flashCard.id] ? `bg-emerald-200 border-emerald-300 shadow-red-900` : `bg-gray-100 border-gray-300 shadow-gray-800`} justify-center items-center w-96 h-fit mb-4 p-5 animate-pulse border rounded-2xl shadow-md`}
           >
             <Text>{isTurned[flashCard.id] ? flashCard.answer : flashCard.question}</Text>
           </Pressable>
-          <FlashCardDeletionModal
-            subtopicId={subtopicId}
-            deletedFlashcard={flashCard}
-            visible={isFlashCardDeletionModalVisible}
-            hide={hideFlashCardDeletionModal}
-            setFlashCards={setFlashCards}
-          />
+          {isFlashCardDeletionModalVisible && (
+            <FlashCardDeletionModal
+              subtopicId={subtopicId}
+              deletedFlashcard={selectedFlashCard}
+              visible={isFlashCardDeletionModalVisible}
+              hide={hideFlashCardDeletionModal}
+              removeFlashCard={removeFlashCard}
+            />
+          )}
         </View>
       )) : (
         <Text className='text-lg font-bold text-center'>Nenhum flashcard cadastrado</Text>

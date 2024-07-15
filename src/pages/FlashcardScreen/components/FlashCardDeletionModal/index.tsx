@@ -1,5 +1,4 @@
 import { Button, Modal, ScrollView, Text, View } from "react-native";
-import { TopicService } from "../../../../integration/study-time/topic/topic.service";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { FlashCard } from "../../../../entity/flashCard.entity";
 import { FlashCardService } from "../../../../integration/study-time/flashCard/flashCard.service";
@@ -7,19 +6,19 @@ import { FlashCardService } from "../../../../integration/study-time/flashCard/f
 interface TopicDeletionModalProps {
   subtopicId: number;
   deletedFlashcard: FlashCard;
-  setFlashCards: (flashCard: any) => void;
+  removeFlashCard: (flashCardId: number) => void;
   visible: boolean;
   hide: () => void;
 }
 
-export default function TopicDeletionModal({ deletedFlashcard, setFlashCards, visible, hide }: TopicDeletionModalProps) {
+export default function TopicDeletionModal({ deletedFlashcard, removeFlashCard, visible, hide }: TopicDeletionModalProps) {
 
   const flashCardService = new FlashCardService();
 
   async function handleDelete() {
     const response = await flashCardService.deleteFlashCard(deletedFlashcard.id);
     if (!response.data) return;
-    setFlashCards((flashcard: any) => flashcard.filter((topic: any) => flashcard.id !== deletedFlashcard.id));
+    removeFlashCard(response.data.id);
     hide();
   }
 

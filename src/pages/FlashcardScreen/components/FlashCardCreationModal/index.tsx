@@ -1,6 +1,7 @@
 import { Controller, useForm } from "react-hook-form";
 import { Button, Modal, SafeAreaView, Text, TextInput, View } from "react-native";
 import { FlashCardService } from "../../../../integration/study-time/flashCard/flashCard.service";
+import { FlashCard } from "../../../../entity/flashCard.entity";
 
 interface FlashCardCreationDto {
   question: string;
@@ -9,12 +10,12 @@ interface FlashCardCreationDto {
 
 interface FlashCardCreationModalProps {
   subtopicId: number;
-  setFlashCards: (flashCards: any) => void;
+  addNewFlashCard: (flashCard: FlashCard) => void;
   visible: boolean;
   hide: () => void;
 }
 
-export default function FlashCardCreationModal({ subtopicId, setFlashCards, visible, hide }: FlashCardCreationModalProps) {
+export default function FlashCardCreationModal({ subtopicId, visible, hide, addNewFlashCard }: FlashCardCreationModalProps) {
 
   const flashCardService = new FlashCardService();
 
@@ -31,8 +32,8 @@ export default function FlashCardCreationModal({ subtopicId, setFlashCards, visi
       subtopicId,
     });
     if (!response.data.id) return;
-    console.log(response.data.id);
-    setFlashCards((flashCards: any) => [...flashCards, { id: response.data.id, question: data.question, answer: data.answer }]);
+    const newFlashCard = { id: response.data.id, question: data.question, answer: data.answer, subtopicId };
+    addNewFlashCard(newFlashCard);
     hide();
   }
 

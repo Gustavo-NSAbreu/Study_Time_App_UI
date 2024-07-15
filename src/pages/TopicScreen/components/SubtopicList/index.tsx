@@ -1,59 +1,70 @@
 import { View, Pressable, Text } from "react-native";
 import { useNavigation } from "@react-navigation/native";
-import { useEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { Subtopic } from "../../../../entity/subtopic.entity";
 import SubtopicDeletionModal from "../SubtopicDeletionModal";
 import { SubtopicService } from "../../../../integration/study-time/subtopic/subtopic.service";
 
-interface SubtopicsProps {
+interface SubtopicListProps {
   topicId: number;
-  setSubtopics: (subtopics: any) => void;
+  setSubtopics: React.Dispatch<React.SetStateAction<Subtopic[]>>
   subtopics: Subtopic[];
 }
 
-export default function Subtopics({ topicId, subtopics, setSubtopics }: SubtopicsProps) {
-
+export default function SubtopicList({ topicId, subtopics, setSubtopics }: SubtopicListProps) {
   const subtopicService = new SubtopicService();
 
-  const [isSubTopicDeletionModalVisible, setIsSubTopicDeletionModalVisible] = useState(false);
+  const [currentSubtopicIdForDeletion, setCurrentSubtopicIdForDeletion] = useState<number | null>(null);
 
-  function showsubTopicDeletionModal() { setIsSubTopicDeletionModalVisible(true); }
-  function hideSubtopicDeletionModal() { setIsSubTopicDeletionModalVisible(false); }
+  function showSubTopicDeletionModal(subtopicId: number) {
+    setCurrentSubtopicIdForDeletion(subtopicId);
+  }
+
+  function hideSubtopicDeletionModal() {
+    setCurrentSubtopicIdForDeletion(null);
+  }
 
   const navigation = useNavigation();
 
-  async function fetchSubtopcis() {
+  async function fetchSubtopics() {
     return await subtopicService.findAllSubtopics(topicId);
   }
 
   useEffect(() => {
-    fetchSubtopcis().then((response) => {
+    console.log("Fetching subtopics for topic", topicId);
+    fetchSubtopics().then((response) => {
       if (!response.data) return;
       setSubtopics(response.data);
+    }).catch(error => {
+      console.error("Failed to fetch subtopics:", error);
     });
   }, []);
 
   return (
     <View>
-      {subtopics.map((subtopic) => (
+      {subtopics.length ? subtopics.map((subtopic) => (
         <View key={subtopic.id}>
           <Pressable
             onPress={() => navigation.navigate({ name: 'Flashcard', params: { subtopicId: subtopic.id, subtopicName: subtopic.title } } as never)}
-            onLongPress={showsubTopicDeletionModal}
+            onLongPress={() => showSubTopicDeletionModal(subtopic.id)} // Pass subtopic ID here
             className='flex-row justify-between border-b border-gray-500 mb-8'
           >
             <Text className='text-lg ml-12'>{subtopic.title}</Text>
             <Text className='text-lg mr-12'>➡️</Text>
           </Pressable>
-          <SubtopicDeletionModal
-            subtopicId={subtopic.id}
-            visible={isSubTopicDeletionModalVisible}
-            setSubtopics={setSubtopics}
-            hide={hideSubtopicDeletionModal}
-            subtopicTitle={subtopic.title}
-          />
+          {currentSubtopicIdForDeletion === subtopic.id && // Check if this subtopic's modal should be shown
+            <SubtopicDeletionModal
+              subtopicId={subtopic.id}
+              visible={currentSubtopicIdForDeletion !== null}
+              setSubtopics={setSubtopics}
+              hide={hideSubtopicDeletionModal}
+              subtopicTitle={subtopic.title}
+            />
+          }
         </View>
-      ))}
+      )) : (
+        <Text className='text-lg font-bold text-center'>Nenhum subtópico cadastrado</Text>
+      )}
     </View>
   );
 }

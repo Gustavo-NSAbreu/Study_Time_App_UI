@@ -2,7 +2,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { Text, View, SafeAreaView, ScrollView, Pressable } from "react-native";
 import { RootStackParamList } from "../../Router";
 import FlashCardList from "./components/FlashCardList";
-import { AntDesign, FontAwesome  } from '@expo/vector-icons';
+import { AntDesign } from '@expo/vector-icons';
 import { useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { FlashCard } from "../../entity/flashCard.entity";
@@ -12,10 +12,21 @@ type FlashCardScreenProps = NativeStackScreenProps<RootStackParamList, 'Flashcar
 
 export default function FlashcardScreen({ route }: FlashCardScreenProps) {
 
-  const [isFlashCardCreationModalVisible, setIsFlashCardCreationModalVisible] = useState(false);
-  const [flashCards, setFlashCards] = useState<FlashCard[]>([]);
   const [subtopicId, _] = useState(route.params.subtopicId);
+  const [flashCards, setFlashCards] = useState<FlashCard[]>([]);
+  const [isFlashCardCreationModalVisible, setIsFlashCardCreationModalVisible] = useState(false);
 
+  function setAllFlashCards(flashCards: FlashCard[]) {
+    setFlashCards(flashCards);
+  }
+
+  function addNewFlashCard(flashCard: FlashCard) {
+    setFlashCards((flashCards: FlashCard[]) => [...flashCards, flashCard]);
+  }
+
+  function removeFlashCard(flashCardId: number) {
+    setFlashCards((flashCards: FlashCard[]) => flashCards.filter(flashCard => flashCard.id !== flashCardId));
+  }
 
   function showFlashCardCreationModal() { setIsFlashCardCreationModalVisible(true); }
   function hideFlashCardCreationModal() { setIsFlashCardCreationModalVisible(false); }
@@ -43,13 +54,19 @@ export default function FlashcardScreen({ route }: FlashCardScreenProps) {
               <AntDesign name="pluscircleo" size={20} color="#3b82f6" />
             </Pressable>
           </View>
-          {subtopicId > 0 ? <FlashCardList subtopicId={subtopicId} flashCards={flashCards} setFlashCards={setFlashCards} /> : null}
+          <FlashCardList
+            subtopicId={subtopicId}
+            flashCards={flashCards}
+            addNewFlashCard={addNewFlashCard}
+            setAllFlashCards={setAllFlashCards}
+            removeFlashCard={removeFlashCard}
+          />
         </View>
         <FlashCardCreationModal
           subtopicId={subtopicId}
           visible={isFlashCardCreationModalVisible}
           hide={hideFlashCardCreationModal}
-          setFlashCards={setFlashCards}
+          addNewFlashCard={addNewFlashCard}
         />
       </ScrollView>
     </SafeAreaView>

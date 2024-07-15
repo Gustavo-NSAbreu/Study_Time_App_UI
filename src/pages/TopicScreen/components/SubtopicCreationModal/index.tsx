@@ -1,6 +1,7 @@
 import { Controller, useForm } from "react-hook-form";
 import { Button, Modal, SafeAreaView, Text, TextInput, View } from "react-native";
 import { SubtopicService } from "../../../../integration/study-time/subtopic/subtopic.service";
+import { Subtopic } from "../../../../entity/subtopic.entity";
 
 interface SubtopicCreationDto {
   title: string;
@@ -8,7 +9,7 @@ interface SubtopicCreationDto {
 
 interface SubtopicCreationModalProps {
   topicId: number;
-  setSubtopics: (subtopics: any) => void;
+  setSubtopics: React.Dispatch<React.SetStateAction<Subtopic[]>>
   visible: boolean;
   hide: () => void;
 }
@@ -28,7 +29,7 @@ export default function SubtopicCreationModal({ topicId, setSubtopics, visible, 
     const response = await subtopicService.createSubtopic({...data, topicId});
     if (!response.data.id) return;
     console.log(response.data);
-    setSubtopics((subtopics: any) => [...subtopics, {id: response.data.id, title: data.title}]);
+    setSubtopics((subtopics: Subtopic[]) => [...subtopics, {id: response.data.id, title: data.title, topicId: topicId}]);
     hide();
   }
 

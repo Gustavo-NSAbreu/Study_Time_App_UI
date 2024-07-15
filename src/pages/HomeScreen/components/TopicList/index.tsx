@@ -8,26 +8,30 @@ import TopicDeletionModal from "../TopicDeletionModal";
 interface TopicListProps {
   userId: number;
   topics: Topic[];
-  setTopics: (topics: Topic[]) => void;
+  setTopics: React.Dispatch<React.SetStateAction<Topic[]>>
 }
 
 export default function TopicList({ userId, topics, setTopics }: TopicListProps) {
-
   const topicService = new TopicService();
 
-  const [isTopicDeletionModalVisible, setIsTopicDeletionVisible] = useState(false);
+  const [currentTopicIdForDeletion, setCurrentTopicIdForDeletion] = useState<number | null>(null);
 
-  function showTopicDeletionModal() { setIsTopicDeletionVisible(true); }
-  function hideTopicDeletionModal() { setIsTopicDeletionVisible(false); }
+  function showTopicDeletionModal(topicId: number) {
+    setCurrentTopicIdForDeletion(topicId);
+  }
+
+  function hideTopicDeletionModal() {
+    setCurrentTopicIdForDeletion(null);
+  }
 
   const navigation = useNavigation();
 
-  async function fetchTopcis() {
+  async function fetchTopics() {
     return await topicService.findAllTopics(userId);
   }
 
   useEffect(() => {
-    fetchTopcis().then((response) => {
+    fetchTopics().then((response) => {
       if (!response.data) return;
       setTopics(response.data);
     });
@@ -39,23 +43,24 @@ export default function TopicList({ userId, topics, setTopics }: TopicListProps)
         <View key={topic.id}>
           <Pressable
             onPress={() => navigation.navigate(({ name: 'Topic', params: { topicId: topic.id, topicName: topic.title } } as never))}
-            onLongPress={showTopicDeletionModal}
+            onLongPress={() => showTopicDeletionModal(topic.id)}
             className='flex-row justify-between border-b border-gray-500 mb-8'
           >
             <Text className='text-lg ml-12'>{topic.title}</Text>
             <Text className='text-lg mr-12'>➡️</Text>
           </Pressable>
-          <TopicDeletionModal
-            topicId={topic.id}
-            topicTitle={topic.title}
-            visible={isTopicDeletionModalVisible}
-            setTopics={setTopics}
-            hide={hideTopicDeletionModal}
-          />
+          {currentTopicIdForDeletion === topic.id &&
+            <TopicDeletionModal
+              topicId={topic.id}
+              topicTitle={topic.title}
+              visible={currentTopicIdForDeletion !== null}
+              setTopics={setTopics}
+              hide={hideTopicDeletionModal}
+            />
+          }
         </View>
-      )):
-        (
-          <Text className='text-lg text-center font-bold'>Nenhum tópíco cadastrado</Text>
+      )) : (
+        <Text className='text-lg text-center font-bold'>Nenhum tópico cadastrado</Text>
       )}
     </View>
   );

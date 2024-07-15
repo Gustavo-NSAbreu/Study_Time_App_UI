@@ -1,6 +1,7 @@
 import { Controller, useForm } from "react-hook-form";
 import { Button, Modal, SafeAreaView, Text, TextInput, View } from "react-native";
 import { TopicService } from "../../../../integration/study-time/topic/topic.service";
+import { Topic } from "../../../../entity/topic.entity";
 
 interface TopicCreationDto {
   title: string;
@@ -8,7 +9,7 @@ interface TopicCreationDto {
 
 interface TopicCreationModalProps {
   userId: number;
-  setTopics: (topics: any) => void;
+  setTopics: React.Dispatch<React.SetStateAction<Topic[]>>
   visible: boolean;
   hide: () => void;
 }
@@ -27,7 +28,7 @@ export default function TopicCreationModal({ userId, setTopics, visible, hide }:
     const response = await topicService.createTopic({...data, userId});
     if (!response.data.id) return;
     console.log(response.data);
-    setTopics((topics: any) => [...topics, {id: response.data.id, title: data.title}]);
+    setTopics((topics: Topic[]) => [...topics, {id: response.data.id, title: data.title, userId: userId}]);
     hide();
   }
 

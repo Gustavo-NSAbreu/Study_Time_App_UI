@@ -1,11 +1,12 @@
 import { Button, Modal, Text, View } from "react-native";
 import { TopicService } from "../../../../integration/study-time/topic/topic.service";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { Topic } from "../../../../entity/topic.entity";
 
 interface TopicDeletionModalProps {
   topicId: number;
   topicTitle: string;
-  setTopics: (topics: any) => void;
+  setTopics: React.Dispatch<React.SetStateAction<Topic[]>>;
   visible: boolean;
   hide: () => void;
 }
@@ -17,7 +18,7 @@ export default function TopicDeletionModal({ topicId, topicTitle, setTopics, vis
   async function handleDelete() {
     const response = await topicService.deleteTopic(topicId);
     if (!response.data) return;
-    setTopics((topics: any) => topics.filter((topic: any) => topic.id !== topicId));
+    setTopics((topics: Topic[]): Topic[] => topics.filter((topic: Topic) => topic.id !== topicId));
     hide();
   }
 

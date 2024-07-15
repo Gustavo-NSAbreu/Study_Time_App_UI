@@ -11,14 +11,27 @@ type subTopicScreenProps = NativeStackScreenProps<RootStackParamList, 'Topic'>;
 
 export default function TopicScreen({ route, navigation }: subTopicScreenProps) {
   
-  const [isSubtopicCreationModalVisible, setIssubTopicCreationModalVisible] = useState(false);
-  const [subtopics, setSubtopics] = useState<Subtopic[]>([]);
   const [topicId, _] = useState(route.params.topicId);
+  const [subtopics, setSubtopics] = useState<Subtopic[]>([]);
+  const [isSubtopicCreationModalVisible, setIssubTopicCreationModalVisible] = useState(false);
+
+  function addNewSubtopic(subtopic: Subtopic) {
+    setSubtopics((subtopics: Subtopic[]) => [...subtopics, subtopic]);
+  }
+
+  function removeSubtopic(subtopicId: number) {
+    setSubtopics((subtopics: Subtopic[]) => subtopics.filter(subtopic => subtopic.id !== subtopicId));
+  }
+
+  function setAllSubtopics(subtopics: Subtopic[]) {
+    setSubtopics(subtopics);
+  }
 
   function showSubtopicCreationModal() { setIssubTopicCreationModalVisible(true); }
   function hideSubtopicCreationModal() { setIssubTopicCreationModalVisible(false); }
 
   useLayoutEffect(() => {
+    console.log("Subtopics length:", subtopics.length);
     navigation.setOptions({
       title: route.params.topicName,
     });
@@ -30,14 +43,18 @@ export default function TopicScreen({ route, navigation }: subTopicScreenProps) 
       <ScrollView className="w-full">
         <View className="w-full mt-20">
           <View className="flex-row gap-52 self-center justify-center items-center mb-12">
-            <Text className="text-2xl font-bold">Subtopicos</Text>
+            <Text className="text-2xl font-bold">Subtópicos</Text>
             <Pressable
               onPress={showSubtopicCreationModal}
             >
               <AntDesign name="pluscircleo" size={20} color="#3b82f6" />
             </Pressable>
           </View>
-          {topicId > 0 ? subtopics.length ? <SubtopicList topicId={topicId}  subtopics={subtopics} setSubtopics={setSubtopics} /> : <Text className="text-lg font-bold text-center">Nenhum subtópico cadastrado</Text> : null}
+          <SubtopicList 
+            topicId={topicId}
+            subtopics={subtopics}
+            setSubtopics={setSubtopics}
+          />
         </View>
         <SubtopicCreationModal
           topicId={topicId}
