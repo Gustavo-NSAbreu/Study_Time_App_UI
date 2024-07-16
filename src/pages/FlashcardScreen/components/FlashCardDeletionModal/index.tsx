@@ -32,8 +32,8 @@ export default function TopicDeletionModal({ deletedFlashcard, removeFlashCard, 
       <SafeAreaView className="items-center w-screen h-screen mt-44">
         <ScrollView>
           <Text className="mb-11 text-2xl">Deseja apagar o flashcard?</Text>
-          <Text className="mb-11 text-md">P:{deletedFlashcard.question}</Text>
-          <Text className="mb-11 text-md">R:{deletedFlashcard.answer}</Text>
+          <Text className="mb-11 text-m mx-8d">P:{deletedFlashcard.question}</Text>
+          <Text className="mb-11 text-md mx-8">R:{deletedFlashcard.answer}</Text>
           <View className="mb-8">
             <Button title="Apagar" onPress={handleDelete} />
           </View>

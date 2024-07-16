@@ -3,21 +3,21 @@ import { SubtopicService } from "../../../../integration/study-time/subtopic/sub
 import { SafeAreaView } from "react-native-safe-area-context";
 
 interface SubtopicDeletionModalProps {
+  visible: boolean;
   subtopicId: number;
   subtopicTitle: string;
-  setSubtopics: (subtopics: any) => void;
-  visible: boolean;
   hide: () => void;
+  removeSubtopic: (subtopicId: number) => void;
 }
 
-export default function SubtopicDeletionModal({ subtopicId, subtopicTitle, setSubtopics, visible, hide }: SubtopicDeletionModalProps) {
+export default function SubtopicDeletionModal({ subtopicId, subtopicTitle, removeSubtopic, visible, hide }: SubtopicDeletionModalProps) {
 
   const subtopicService = new SubtopicService();
 
   async function handleDelete() {
     const response = await subtopicService.deleteSubtopic(subtopicId);
     if (!response.data) return;
-    setSubtopics((subtopics: any) => subtopics.filter((subtopic: any) => subtopic.id !== subtopicId));
+    removeSubtopic(response.data.id);
     hide();
   }
 
@@ -29,7 +29,7 @@ export default function SubtopicDeletionModal({ subtopicId, subtopicTitle, setSu
       className="items-center w-screen h-screen"
     >
       <SafeAreaView className="items-center w-screen h-screen mt-44">
-        <Text className="mb-11 text-2xl">Deseja apagar o tópico {subtopicTitle}?</Text>
+        <Text className="mb-11 mx-8 text-2xl text-center">Deseja apagar o tópico {subtopicTitle}?</Text>
         <View className="mb-8">
           <Button title="Apagar" onPress={handleDelete} />
         </View>

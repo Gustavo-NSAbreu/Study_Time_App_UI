@@ -22,7 +22,6 @@ export default function RegisterScreen() {
   async function onSubmit(data: CreateUserDto) {
     const response = await userService.createUser(data);
     if (response?.status !== 201) {
-      console.log('Error');
       return;
     }
     setUserInfo({id: response.data.id, name: data.name});

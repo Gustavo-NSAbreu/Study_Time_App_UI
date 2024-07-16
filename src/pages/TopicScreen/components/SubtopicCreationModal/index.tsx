@@ -9,27 +9,27 @@ interface SubtopicCreationDto {
 
 interface SubtopicCreationModalProps {
   topicId: number;
-  setSubtopics: React.Dispatch<React.SetStateAction<Subtopic[]>>
   visible: boolean;
   hide: () => void;
+  addNewSubtopic: (subtopic: Subtopic) => void;
 }
 
-export default function SubtopicCreationModal({ topicId, setSubtopics, visible, hide }: SubtopicCreationModalProps) {
+export default function SubtopicCreationModal({ topicId, addNewSubtopic, visible, hide }: SubtopicCreationModalProps) {
 
   const subtopicService = new SubtopicService();
 
-  const { handleSubmit, control } = useForm<SubtopicCreationDto>({
+  const { handleSubmit, control, reset } = useForm<SubtopicCreationDto>({
     defaultValues: {
       title: '',
     }
   });
 
   async function onSubmit(data: SubtopicCreationDto) {
-    console.log(data);
     const response = await subtopicService.createSubtopic({...data, topicId});
     if (!response.data.id) return;
-    console.log(response.data);
-    setSubtopics((subtopics: Subtopic[]) => [...subtopics, {id: response.data.id, title: data.title, topicId: topicId}]);
+    const newSubtopic = { id: response.data.id, title: data.title, topicId };
+    addNewSubtopic(newSubtopic);
+    reset();
     hide();
   }
 

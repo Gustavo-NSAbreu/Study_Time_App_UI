@@ -3,18 +3,21 @@ import { Text, View, SafeAreaView, ScrollView, Pressable } from "react-native";
 import { RootStackParamList } from "../../Router";
 import FlashCardList from "./components/FlashCardList";
 import { AntDesign } from '@expo/vector-icons';
-import { useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { FlashCard } from "../../entity/flashCard.entity";
 import FlashCardCreationModal from "./components/FlashCardCreationModal";
+import Timer from "./components/TImer";
 
 type FlashCardScreenProps = NativeStackScreenProps<RootStackParamList, 'Flashcard'>;
 
 export default function FlashcardScreen({ route }: FlashCardScreenProps) {
 
-  const [subtopicId, _] = useState(route.params.subtopicId);
+  const [timer, setTimer] = useState<number>(0);
+  const [isTimerRunning, setIsTimerRunning] = useState<boolean>(false);
+  const [subtopicId, _] = useState<number>(route.params.subtopicId);
   const [flashCards, setFlashCards] = useState<FlashCard[]>([]);
-  const [isFlashCardCreationModalVisible, setIsFlashCardCreationModalVisible] = useState(false);
+  const [isFlashCardCreationModalVisible, setIsFlashCardCreationModalVisible] = useState<boolean>(false);
 
   function setAllFlashCards(flashCards: FlashCard[]) {
     setFlashCards(flashCards);
@@ -34,18 +37,16 @@ export default function FlashcardScreen({ route }: FlashCardScreenProps) {
   const navigation = useNavigation();
 
   useLayoutEffect(() => {
-  navigation.setOptions({
-    title: route.params.subtopicName,
-  });
+    navigation.setOptions({
+      title: route.params.subtopicName,
+    });
   }, [navigation]);
   
   return (
-    <SafeAreaView className='items-center w-screen h-fit'>
+    <SafeAreaView className='items-center justify-start w-screen h-fit'>
       <ScrollView>
         <View>
-          <View className='items-center justify-center p-12 mb-10'>
-            <Text className="text-4xl">Cronômetro</Text>
-          </View>
+          <Timer />
           <View className='flex-row gap-44 self-center justify-center items-center mb-12'>
             <Text className='text-xl font-bold'>Flashcards</Text>
             <Pressable
@@ -57,7 +58,6 @@ export default function FlashcardScreen({ route }: FlashCardScreenProps) {
           <FlashCardList
             subtopicId={subtopicId}
             flashCards={flashCards}
-            addNewFlashCard={addNewFlashCard}
             setAllFlashCards={setAllFlashCards}
             removeFlashCard={removeFlashCard}
           />

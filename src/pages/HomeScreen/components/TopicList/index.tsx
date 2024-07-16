@@ -4,14 +4,16 @@ import { useEffect, useState } from "react";
 import { TopicService } from "../../../../integration/study-time/topic/topic.service";
 import { Topic } from "../../../../entity/topic.entity";
 import TopicDeletionModal from "../TopicDeletionModal";
+import { AntDesign } from '@expo/vector-icons';
 
 interface TopicListProps {
   userId: number;
   topics: Topic[];
-  setTopics: React.Dispatch<React.SetStateAction<Topic[]>>
+  setAllTopics: (topics: Topic[]) => void;
+  removeTopic: (topicId: number) => void;
 }
 
-export default function TopicList({ userId, topics, setTopics }: TopicListProps) {
+export default function TopicList({ userId, topics, removeTopic, setAllTopics }: TopicListProps) {
   const topicService = new TopicService();
 
   const [currentTopicIdForDeletion, setCurrentTopicIdForDeletion] = useState<number | null>(null);
@@ -33,28 +35,37 @@ export default function TopicList({ userId, topics, setTopics }: TopicListProps)
   useEffect(() => {
     fetchTopics().then((response) => {
       if (!response.data) return;
-      setTopics(response.data);
+      setAllTopics(response.data);
     });
   }, []);
 
   return (
-    <View>
-      {topics.length ? topics.map((topic) => (
+    <View className="bg-gray-50 mx-6 rounded-lg">
+      {topics.length ? topics.map((topic, index) => (
         <View key={topic.id}>
           <Pressable
             onPress={() => navigation.navigate(({ name: 'Topic', params: { topicId: topic.id, topicName: topic.title } } as never))}
             onLongPress={() => showTopicDeletionModal(topic.id)}
-            className='flex-row justify-between border-b border-gray-500 mb-8'
+            className={`flex-row justify-between items-center h-12 active:bg-gray-200
+              ${index === 0 ? 'rounded-t-lg' : ''}
+              ${index === topics.length - 1 ? 'rounded-b-lg' : ''}
+              ${index !== topics.length - 1 ? 'border-b border-gray-200' : ''}
+            `}
           >
-            <Text className='text-lg ml-12'>{topic.title}</Text>
-            <Text className='text-lg mr-12'>➡️</Text>
+            <Text className='text-lg ml-5'>{topic.title}</Text>
+            <View className="mr-3">
+              <AntDesign 
+                name="right"
+                size={16}
+              />
+            </View>
           </Pressable>
           {currentTopicIdForDeletion === topic.id &&
             <TopicDeletionModal
               topicId={topic.id}
               topicTitle={topic.title}
               visible={currentTopicIdForDeletion !== null}
-              setTopics={setTopics}
+              removeTopic={removeTopic}
               hide={hideTopicDeletionModal}
             />
           }

@@ -19,7 +19,7 @@ export default function FlashCardCreationModal({ subtopicId, visible, hide, addN
 
   const flashCardService = new FlashCardService();
 
-  const { handleSubmit, control } = useForm<FlashCardCreationDto>({
+  const { handleSubmit, control, reset } = useForm<FlashCardCreationDto>({
     defaultValues: {
       question: "",
       answer: ""
@@ -34,6 +34,7 @@ export default function FlashCardCreationModal({ subtopicId, visible, hide, addN
     if (!response.data.id) return;
     const newFlashCard = { id: response.data.id, question: data.question, answer: data.answer, subtopicId };
     addNewFlashCard(newFlashCard);
+    reset();
     hide();
   }
 

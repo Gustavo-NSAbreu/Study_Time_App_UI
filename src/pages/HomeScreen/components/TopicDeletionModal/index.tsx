@@ -6,19 +6,19 @@ import { Topic } from "../../../../entity/topic.entity";
 interface TopicDeletionModalProps {
   topicId: number;
   topicTitle: string;
-  setTopics: React.Dispatch<React.SetStateAction<Topic[]>>;
+  removeTopic: (topicId: number) => void;
   visible: boolean;
   hide: () => void;
 }
 
-export default function TopicDeletionModal({ topicId, topicTitle, setTopics, visible, hide }: TopicDeletionModalProps) {
+export default function TopicDeletionModal({ topicId, topicTitle, removeTopic, visible, hide }: TopicDeletionModalProps) {
 
   const topicService = new TopicService();
 
   async function handleDelete() {
     const response = await topicService.deleteTopic(topicId);
     if (!response.data) return;
-    setTopics((topics: Topic[]): Topic[] => topics.filter((topic: Topic) => topic.id !== topicId));
+    removeTopic(response.data.id);
     hide();
   }
 
@@ -30,7 +30,7 @@ export default function TopicDeletionModal({ topicId, topicTitle, setTopics, vis
       className="items-center w-screen h-screen"
     >
       <SafeAreaView className="items-center w-screen h-screen mt-44">
-        <Text className="mb-11 text-2xl">Deseja apagar o tópico {topicTitle}?</Text>
+        <Text className="mb-11 mx-8 text-2xl text-center">Deseja apagar o tópico {topicTitle}?</Text>
         <View className="mb-8">
           <Button title="Apagar" onPress={handleDelete} />
         </View>

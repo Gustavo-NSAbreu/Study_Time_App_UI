@@ -8,7 +8,6 @@ interface FlashCardListProps {
   subtopicId: number;
   flashCards: FlashCard[];
   removeFlashCard: (flashCardId: number) => void;
-  addNewFlashCard: (flashCard: FlashCard) => void;
   setAllFlashCards: (flashCards: FlashCard[]) => void;
 }
 
@@ -16,7 +15,7 @@ interface Turned {
   [key: number]: boolean;
 }
 
-export default function FlashCardList({ subtopicId, flashCards, addNewFlashCard, setAllFlashCards, removeFlashCard }: FlashCardListProps) {
+export default function FlashCardList({ subtopicId, flashCards, setAllFlashCards, removeFlashCard }: FlashCardListProps) {
   const flashCardService = new FlashCardService();
   
   const [isTurned, setIsTurned] = useState<Turned>({});

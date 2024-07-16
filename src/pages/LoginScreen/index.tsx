@@ -21,7 +21,6 @@ export default function LoginScreen() {
   async function onSubmit(loginData: LoginDto) {
     const response = await userService.login(loginData);
     if (response?.status !== 200) {
-      console.log(response);
       return;
     }
     const userInfo = {id: response.data.id, name: response.data.name}

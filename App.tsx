@@ -1,6 +1,7 @@
 import React from 'react';
 import Router from './src/Router';
 import { NativeWindStyleSheet } from "nativewind";
+import TimerProvider from './src/contexts/timer.context';
 
 NativeWindStyleSheet.setOutput({
   default: "native",
@@ -8,6 +9,8 @@ NativeWindStyleSheet.setOutput({
 
 export default function App() {
   return (
-    <Router />
+    <TimerProvider>
+      <Router />
+    </TimerProvider>
   );
 }

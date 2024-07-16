@@ -21,17 +21,16 @@ export class UserService {
     try {
       return await this.httpClient.post<User>('/user', user);
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 
   async login(user: LoginDto) {
     try {
       const response = await this.httpClient.post<User>('/user/login', user);
-      console.log(response.data.id);
       return response;
     } catch (error) {
-      console.log(error);
+      console.error(error);
     }
   }
 

@@ -9,26 +9,27 @@ interface TopicCreationDto {
 
 interface TopicCreationModalProps {
   userId: number;
-  setTopics: React.Dispatch<React.SetStateAction<Topic[]>>
+  addNewTopic: (topic: Topic) => void;
   visible: boolean;
   hide: () => void;
 }
 
-export default function TopicCreationModal({ userId, setTopics, visible, hide }: TopicCreationModalProps) {
+export default function TopicCreationModal({ userId, addNewTopic, visible, hide }: TopicCreationModalProps) {
 
   const topicService = new TopicService();
 
-  const { handleSubmit, control } = useForm<TopicCreationDto>({
+  const { handleSubmit, control, reset } = useForm<TopicCreationDto>({
     defaultValues: {
       title: '',
     }
   });
 
   async function onSubmit(data: TopicCreationDto) {
-    const response = await topicService.createTopic({...data, userId});
+    const response = await topicService.createTopic({...data, userId, lastDateStudy: new Date()});
     if (!response.data.id) return;
-    console.log(response.data);
-    setTopics((topics: Topic[]) => [...topics, {id: response.data.id, title: data.title, userId: userId}]);
+    const newTopic = { id: response.data.id, title: data.title, userId };
+    addNewTopic(newTopic);
+    reset();
     hide();
   }
 
